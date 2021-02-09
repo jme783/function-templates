@@ -1,6 +1,7 @@
 {
   "name": "vaccine-standby",
   "dependencies": {
-    "airtable": "^0.10.1"
+    "airtable": "^0.10.1",
+    "google-spreadsheet": "^3.1.15"
   }
 }

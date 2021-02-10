@@ -89,8 +89,7 @@
       <section>
         <h3>Test your Standby List</h3>
         <p>Once you deploy your Studio Flow successfully, you can try out your Standby List by sending a text message to <strong id="phone-number"></strong>.</p>
-        <p>When you finish going through the chatbot, you should see your record recorded below:</p>
-        <div id="airtable-embedded-iframe-container"></div>
+        <p>When you finish going through the chatbot, you should see your record automatically recorded in your <strong><a href="" target="_blank" id="sheet-link">Google Sheet</a></strong>.</p>
       </section>
     </div>
     <footer>
@@ -132,16 +131,16 @@
         element.innerText = fullUrl
       })
       let request = new XMLHttpRequest();
-      request.open('GET', fullUrl + '/return-airtable-config');
+      request.open('GET', fullUrl + '/return-config');
       request.send();
       request.onload = () => {
         const response = JSON.parse(request.response);
-        const airtable_embed_code = response.airtable_embed_code;
+        const google_sheet_id = response.google_sheet_id;
         const phone_number = response.phone_number;
 
-        // Grab the Airtable embed code and use it to populate the iFrame to embed the base
-        const iframe_container = document.getElementById('airtable-embedded-iframe-container');
-        iframe_container.innerHTML = airtable_embed_code;
+        // Grab the Google Sheet ID and populate the link to it.
+        const sheet_link_element = document.getElementById('sheet-link');
+        sheet_link_element.href= `https://docs.google.com/spreadsheets/d/${google_sheet_id}/edit#gid=0`;
 
         // Grab the phone number being used and display it to help the user test their app
         const phone_number_element = document.getElementById('phone-number');

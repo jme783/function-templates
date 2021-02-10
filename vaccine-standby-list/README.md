@@ -1,33 +1,41 @@
 # COVID-19 Vaccine Standby List
 
-This Quick Deploy app is designed for public health agencies to create a COVID-19 vaccine eligibility standby list for their city or state. Residents send an SMS to a pre-configured phone number, and are asked a series of demographic questions informed by the CDC's vaccine rollout guidelines powered by a Twilio Studio Flow. Resident responses to the SMS chatbot are captured in an Airtable base. 
+This Quick Deploy app is designed for public health agencies to create a COVID-19 vaccine eligibility standby list for their city or state. Residents send an SMS to a pre-configured phone number, and are asked a series of demographic questions informed by the CDC's vaccine rollout guidelines powered by a Twilio Studio Flow. Resident responses to the SMS chatbot are captured in a Google Sheet. 
 
 This data is meant to help ensure vaccinations are administered as quickly as possible as supply becomes available. With this template, your agency can create a standardized list of eligible vaccine recipients. In exchange for sharing this information, residents are notified when it is their turn to receive the vaccine.
 
 ## Pre-requisites
 
-### Airtable configuration
-This app stores the data sent by the resident in response to the SMS chatbot in Airtable to demonstrate a working persistance layer. Follow the steps below to grab all the Airtable identifiers needed to be set as environment variables for this app:
+### Google Sheets Configuration
+This app stores the data sent by the resident in response to the SMS chatbot in Google Sheets to demonstrate a working persistance layer. Follow the steps below to grab all the Google Sheets identifiers needed to be set as environment variables for this app:
 
-1. [Sign up](https://airtable.com/signup) for an Airtable account if you don't already have one.
+1. Make a copy of <a href="https://docs.google.com/spreadsheets/d/1gTTPEe2eWuDr5aOzEP1DEK2tlrC4XUyoM5AEDrgYhoA/edit#gid=0" target="_blank">this Google Sheet</a> by clicking **File > Make a Copy** as shown below:
 
-2. Copy the [COVID-19 Vaccine Standby List base](https://airtable.com/universe/expeJaAHwR6NK9al0/covid-19-vaccine-standby-list) from Airtable Universe by clicking the "Copy base" button as shown below:
+![Google Sheets Copy](https://twilio-cms-prod.s3.amazonaws.com/images/gsheets-make-a-copy.original.png)
 
-![Airtable Universe Copy](https://twilio-cms-stage.s3.amazonaws.com/images/copy-airtable-base_hHaKfoW.width-800.png)
+2. Create a **Google Service Account**
+-  <a href="https://console.developers.google.com/projectcreate" target="_blank">Create new Google APIs Project</a> if you don't already have one
+- Back on the <a href="" target="_blank">Google Developers Console dashboard</a>, make sure your project is selected in the navigation as shown below:
+![Google APIs Project Selector](https://twilio-cms-prod.s3.amazonaws.com/images/google-apis-project-selector.original.png)
+- Enable the Sheets API for your Project
+  - Click on the **Enable APIs and Services** link
+  - Search for Google Sheets API and click on it from the results
+  - Click on the **Enable** button as shown below:
 
-3. Click on your new base from your Airtable homepage to open it. Then, follow [these steps](https://support.airtable.com/hc/en-us/articles/217846478-Embedding-a-view-or-base) to create a share link for your base and click the embed icon to launch the embed base preview page as shown below:
+![](https://twilio-cms-prod.s3.amazonaws.com/images/google-sheets-api-enable.original.png)
+- One enabled, click on the **Create Credentials** button from the <a href="https://console.developers.google.com/apis/api/sheets.googleapis.com/overview" target="_blank">Google Sheets API overview</a> page (you should be redirected here automatically)
+- Fill out Step 1 as shown below:
+![](https://twilio-cms-prod.s3.amazonaws.com/images/google-sheets-api-credentials-1.original.png)
+- Fill out Step 2 as shown below:
+![](https://twilio-cms-prod.s3.amazonaws.com/images/google-sheets-credentials-2.original.png)
 
-![Embed icon](https://twilio-cms-stage.s3.amazonaws.com/images/launch-embed-view.width-500.png)
+- Click **Continue** to download the JSON file that contains the credentials for the service account
 
-Next, click in the dark box and copy the the entire Embed code HTML to your clipboard (ctrl+c / cmd+c):
+3. You are now ready to grab all the Google Sheets identifiers required as environment variables:
 
-![Embed code](https://twilio-cms-stage.s3.amazonaws.com/images/copy-embed-code.width-500.png)
-
-4. You are now ready to grab all the Airtable identifiers required as environment variables:
-
-- Paste the contents of your clipboard as the value of `AIRTABLE_EMBED_CODE` in the `.env` file (should be the entire HTML string of the embeddable iframe). 
-- Go to the [Airtable REST API docs](https://airtable.com/api), and select your new base. Copy your base ID shown (beginning with app) and set it as the value of `AIRTABLE_BASE_ID` in the `.env` file
-- Go to your [Airtable Account page](https://airtable.com/account) and generate an API key ([instructions](https://support.airtable.com/hc/en-us/articles/219046777-How-do-I-get-my-API-key-)). Copy the API key and set it as the value of `AIRTABLE_API_KEY` in the `.env` file
+- From the credentials JSON file you just downloaded, copy the value of `client_email` and set it as the value of `GOOGLE_SERVICE_ACCOUNT_EMAIL` in the `.env` file.
+- From the same object in the JSON crednetials file, copy the value of `private_key` and set it as the value of `GOOGLE_PRIVATE_KEY` in the `.env` file
+- Go to your copy of the COVID-19 Vaccine Standby List Google Sheet, and grab the <a href="https://developers.google.com/sheets/api/guides/concepts#spreadsheet_id" target="_blank">sheet ID</a> from the URL. Set this ID as the value of `GOOGLE_SHEET_ID` in the `.env` file
 
 ### Environment variables
 
@@ -35,12 +43,12 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable              | Description | Required |
-| :-------------------- | :----------------------------------------------------- | :-- |
-| `MY_PHONE_NUMBER`     | Your Twilio phone number for sending and receiving SMS | Yes |
-| `AIRTABLE_API_KEY`    | Your Airtable API key                                  | Yes |
-| `AIRTABLE_BASE_ID`    | The Airtable Base ID. Base should be copied from the [vaccine standby list template](https://airtable.com/universe/expeJaAHwR6NK9al0/covid-19-vaccine-standby-list) on Airtable Universe | Yes |
-| `AIRTABLE_EMBED_CODE` | Full HTML string of embed code of your Airtable base. You can grab this from the embed preview page | Yes |
+| Variable                       | Description | Required |
+| :--------------------          | :----------------------------------------------------- | :-- |
+| `MY_PHONE_NUMBER`              | Your Twilio phone number for sending and receiving SMS | Yes |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | Google Service Account email                           | Yes |
+| `GOOGLE_PRIVATE_KEY`           |  Private key of Google Service Account                 | Yes |
+| `GOOGLE_SHEET_ID`              | ID of the Google Sheet from its URL                    | Yes |
 
 ## Create a new project with the template
 

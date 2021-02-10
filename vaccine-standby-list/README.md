@@ -23,10 +23,20 @@ This app stores the data sent by the resident in response to the SMS chatbot in 
   - Click on the **Enable** button as shown below:
 
 ![](https://twilio-cms-prod.s3.amazonaws.com/images/google-sheets-api-enable.original.png)
+
 - One enabled, click on the **Create Credentials** button from the <a href="https://console.developers.google.com/apis/api/sheets.googleapis.com/overview" target="_blank">Google Sheets API overview</a> page (you should be redirected here automatically)
+
 - Fill out Step 1 as shown below:
+  - Select the **Google Sheets API**
+  - Select **Web Server**
+  - Select **Application Data**
+  - Select **No** when asked about using App Engine or Compute Engine
 ![](https://twilio-cms-prod.s3.amazonaws.com/images/google-sheets-api-credentials-1.original.png)
+
 - Fill out Step 2 as shown below:
+  - Choose a **service account name**
+  - Set the Role to **Project > Editor**
+  - Set key type to **JSON**
 ![](https://twilio-cms-prod.s3.amazonaws.com/images/google-sheets-credentials-2.original.png)
 
 - Click **Continue** to download the JSON file that contains the credentials for the service account
